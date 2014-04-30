@@ -8,24 +8,48 @@ typedef struct Node
 } Node;
 
 
-void initlist(Node *list)
+Node* initnode(Node *before, char data)
 {
-    char letter;
-    for(letter = 'a'; letter <= 'h'; letter++)
-    {
-        list = list->next = (Node*) malloc(sizeof(Node));
-        list->data = letter;
-    }
-    for(letter = 'a'; letter <= 'h'; letter++)
-    {
-        list = list->next = (Node*) malloc(sizeof(Node));
-        list->data = 'z';
-    }
+    Node* new = (Node*) malloc(sizeof(Node));
+    before->next = new;
+    new->data = data;
+
+    return new;
 }
 
 
+void initlist(Node *list)
+{
+    char letter, i;
+    for(i = 3; i; --i)
+        for(letter = 'a'; letter <= 'h'; letter++)
+            list = initnode(list, letter);
+}
+
+
+void deletelist(Node *list)
+{
+    Node *temp, *curr;
+
+    while(list->next)
+    {
+        temp = list->next;
+        free(list);
+        list = temp;
+    }
+}
+void rdeletelist(Node *list)
+{
+    if(!list) return;
+
+    deletelist(list->next);
+    free(list);
+}
+
 void printlist(Node *list)
 {
+    if(!list) return;
+
     while(list = list->next)
         printf("%c%s", list->data, list->next ? "->" : "");
 
@@ -120,7 +144,10 @@ int main()
     rinvertlist(list);
     //printlist(list);
 
-    rremoveduplicates(list);
+    //rremoveduplicates(list);
+    printlist(list);
+
+    deletelist(list);
     printlist(list);
 
     return 0;
